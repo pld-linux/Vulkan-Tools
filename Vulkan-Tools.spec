@@ -19,9 +19,9 @@ BuildRequires:	cmake >= 3.4
 BuildRequires:	glslang
 %{?with_x11:BuildRequires:	libxcb-devel}
 BuildRequires:	pkgconfig
-BuildRequires:	python3 >= 3
+BuildRequires:	python3 >= 1:3
 BuildRequires:	python3-lxml
-BuildRequires:	python3-modules >= 3
+BuildRequires:	python3-modules >= 1:3
 %{?with_wayland:BuildRequires:	wayland-devel}
 %{?with_x11:BuildRequires:	xorg-lib-libX11-devel}
 Obsoletes:	vulkan-sdk-demos
