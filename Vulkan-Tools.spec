@@ -24,6 +24,7 @@ BuildRequires:	python3-lxml
 BuildRequires:	python3-modules >= 3
 %{?with_wayland:BuildRequires:	wayland-devel}
 %{?with_x11:BuildRequires:	xorg-lib-libX11-devel}
+Obsoletes:	vulkan-sdk-demos
 Obsoletes:	vulkan-sdk-tools
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
