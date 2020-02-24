@@ -2,7 +2,7 @@
 # Conditional build:
 %bcond_with	tests	# run tests
 
-%define	api_version	1.1.107
+%define	api_version	1.2.133
 
 Summary:	Vulkan API Tools
 Summary(pl.UTF-8):	Narzędzia API Vulkan
@@ -12,10 +12,10 @@ Release:	1
 License:	Apache v2.0
 Group:		Development
 Source0:	https://github.com/KhronosGroup/Vulkan-Tools/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	658bece65da93e463c59b48ffa9057a2
+# Source0-md5:	f64b1064d114ff0ca5f140781a0973b1
 URL:		https://github.com/KhronosGroup/Vulkan-Tools/
 BuildRequires:	Vulkan-Loader-devel >= %{api_version}
-BuildRequires:	cmake >= 3.4
+BuildRequires:	cmake >= 3.10.2
 BuildRequires:	glslang
 %{?with_x11:BuildRequires:	libxcb-devel}
 BuildRequires:	pkgconfig
