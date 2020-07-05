@@ -1,8 +1,9 @@
-
+#
 # Conditional build:
-%bcond_with	tests	# run tests
+%bcond_without	wayland	# Wayland support
+%bcond_without	x11	# X11 (Xlib/XCB) support
 
-%define	api_version	1.2.133
+%define	api_version	1.2.135.0
 
 Summary:	Vulkan API Tools
 Summary(pl.UTF-8):	Narzędzia API Vulkan
@@ -10,9 +11,10 @@ Name:		Vulkan-Tools
 Version:	%{api_version}
 Release:	1
 License:	Apache v2.0
-Group:		Development
-Source0:	https://github.com/KhronosGroup/Vulkan-Tools/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	f64b1064d114ff0ca5f140781a0973b1
+Group:		Applications/Graphics
+#Source0Download: https://github.com/KhronosGroup/Vulkan-Tools/releases
+Source0:	https://github.com/KhronosGroup/Vulkan-Tools/archive/sdk-%{version}/%{name}-sdk-%{version}.tar.gz
+# Source0-md5:	89a7d9ea1cca45dfec9230eb2315df7b
 URL:		https://github.com/KhronosGroup/Vulkan-Tools/
 BuildRequires:	Vulkan-Loader-devel >= %{api_version}
 BuildRequires:	cmake >= 3.10.2
@@ -37,7 +39,7 @@ Narzędzia do graficznego API Vulkan.
 %package mock-icd
 Summary:	Dummy Vulkan ICD (driver)
 Summary(pl.UTF-8):	Atrapa sterownika Vulkan
-Group:		Development
+Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
 
 %description mock-icd
@@ -47,38 +49,29 @@ Dummy Vulkan ICD (driver).
 Atrapa sterownika Vulkan.
 
 %prep
-%setup -qn %{name}-%{version}
+%setup -qn %{name}-sdk-%{version}
 
 %build
 install -d build
 cd build
 
-# .pc file creation expect CMAKE_INSTALL_LIBDIR to be relative (to CMAKE_INSTALL_PREFIX)
 %cmake .. \
-	-DCMAKE_INSTALL_LIBDIR=%{_lib} \
+	%{!?with_wayland:-DBUILD_WSI_WAYLAND_SUPPORT=OFF} \
+	%{!?with_x11:-DBUILD_WSI_XCB_SUPPORT=OFF} \
+	%{!?with_x11:-DBUILD_WSI_XLIB_SUPPORT=OFF} \
 	-DGLSLANG_INSTALL_DIR=%{_prefix} \
-	-DBUILD_TESTS=%{?with_tests:ON}%{!?with_tests:OFF} \
 	-DINSTALL_ICD=ON
 
 %{__make}
 
-%if %{with tests}
-cd tests
-LC_ALL=C.UTF-8 VK_LAYER_PATH=layers LD_LIBRARY_PATH=../loader:layers ./run_loader_tests.sh
-cd ..
-%endif
-
-cd ..
-
 %install
 rm -rf $RPM_BUILD_ROOT
-
-install -d $RPM_BUILD_ROOT%{_sysconfdir}/vulkan/icd.d/
+install -d $RPM_BUILD_ROOT%{_sysconfdir}/vulkan/icd.d
 
 %{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-mv $RPM_BUILD_ROOT%{_datadir}/vulkan/icd.d/VkICD_mock_icd.json \
+%{__mv} $RPM_BUILD_ROOT%{_datadir}/vulkan/icd.d/VkICD_mock_icd.json \
 	$RPM_BUILD_ROOT%{_sysconfdir}/vulkan/icd.d/VkICD_mock_icd.json.disabled
 
 %clean
@@ -86,7 +79,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc README.md GOVERNANCE.md CONTRIBUTING.md
+%doc GOVERNANCE.md README.md vulkaninfo/vulkaninfo.md
 %attr(755,root,root) %{_bindir}/vkcube
 %attr(755,root,root) %{_bindir}/vkcubepp
 %attr(755,root,root) %{_bindir}/vulkaninfo
