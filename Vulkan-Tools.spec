@@ -3,7 +3,7 @@
 %bcond_without	wayland	# Wayland support
 %bcond_without	x11	# X11 (Xlib/XCB) support
 
-%define	api_version	1.2.135.0
+%define	api_version	1.2.198.0
 
 Summary:	Vulkan API Tools
 Summary(pl.UTF-8):	Narzędzia API Vulkan
@@ -12,9 +12,9 @@ Version:	%{api_version}
 Release:	1
 License:	Apache v2.0
 Group:		Applications/Graphics
-#Source0Download: https://github.com/KhronosGroup/Vulkan-Tools/releases
+#Source0Download: https://github.com/KhronosGroup/Vulkan-Tools/tags
 Source0:	https://github.com/KhronosGroup/Vulkan-Tools/archive/sdk-%{version}/%{name}-sdk-%{version}.tar.gz
-# Source0-md5:	89a7d9ea1cca45dfec9230eb2315df7b
+# Source0-md5:	80b230159fb52aeb7fac1e83909ad57e
 URL:		https://github.com/KhronosGroup/Vulkan-Tools/
 BuildRequires:	Vulkan-Loader-devel >= %{api_version}
 BuildRequires:	cmake >= 3.10.2
