@@ -3,7 +3,7 @@
 %bcond_without	wayland	# Wayland support
 %bcond_without	x11	# X11 (Xlib/XCB) support
 
-%define	api_version	1.2.198.0
+%define	api_version	1.3.224.1
 
 Summary:	Vulkan API Tools
 Summary(pl.UTF-8):	Narzędzia API Vulkan
@@ -14,7 +14,7 @@ License:	Apache v2.0
 Group:		Applications/Graphics
 #Source0Download: https://github.com/KhronosGroup/Vulkan-Tools/tags
 Source0:	https://github.com/KhronosGroup/Vulkan-Tools/archive/sdk-%{version}/%{name}-sdk-%{version}.tar.gz
-# Source0-md5:	80b230159fb52aeb7fac1e83909ad57e
+# Source0-md5:	1e0751827d92fbd715687bdce6d374f4
 URL:		https://github.com/KhronosGroup/Vulkan-Tools/
 BuildRequires:	Vulkan-Loader-devel >= %{api_version}
 BuildRequires:	cmake >= 3.10.2
@@ -25,9 +25,10 @@ BuildRequires:	python3 >= 1:3
 BuildRequires:	python3-lxml
 BuildRequires:	python3-modules >= 1:3
 %{?with_wayland:BuildRequires:	wayland-devel}
+%{?with_wayland:BuildRequires:	wayland-protocols}
 %{?with_x11:BuildRequires:	xorg-lib-libX11-devel}
-Obsoletes:	vulkan-sdk-demos
-Obsoletes:	vulkan-sdk-tools
+Obsoletes:	vulkan-sdk-demos < 1.1
+Obsoletes:	vulkan-sdk-tools < 1.1
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -81,6 +82,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %doc GOVERNANCE.md README.md vulkaninfo/vulkaninfo.md
 %attr(755,root,root) %{_bindir}/vkcube
+%attr(755,root,root) %{_bindir}/vkcube-wayland
 %attr(755,root,root) %{_bindir}/vkcubepp
 %attr(755,root,root) %{_bindir}/vulkaninfo
 
