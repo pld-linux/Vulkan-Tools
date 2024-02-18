@@ -3,7 +3,8 @@
 %bcond_without	wayland	# Wayland support
 %bcond_without	x11	# X11 (Xlib/XCB) support
 
-%define	api_version	1.3.224.1
+%define	api_version	1.3.275.0
+%define	gitref		vulkan-sdk-%{api_version}
 
 Summary:	Vulkan API Tools
 Summary(pl.UTF-8):	Narzędzia API Vulkan
@@ -13,17 +14,19 @@ Release:	1
 License:	Apache v2.0
 Group:		Applications/Graphics
 #Source0Download: https://github.com/KhronosGroup/Vulkan-Tools/tags
-Source0:	https://github.com/KhronosGroup/Vulkan-Tools/archive/sdk-%{version}/%{name}-sdk-%{version}.tar.gz
-# Source0-md5:	1e0751827d92fbd715687bdce6d374f4
+Source0:	https://github.com/KhronosGroup/Vulkan-Tools/archive/%{gitref}/%{name}-%{gitref}.tar.gz
+# Source0-md5:	438bd9ce3e70c54b43101edb12dd8d19
 URL:		https://github.com/KhronosGroup/Vulkan-Tools/
 BuildRequires:	Vulkan-Loader-devel >= %{api_version}
-BuildRequires:	cmake >= 3.10.2
+BuildRequires:	cmake >= 3.17.2
 BuildRequires:	glslang
+BuildRequires:	libstdc++-devel >= 6:7
 %{?with_x11:BuildRequires:	libxcb-devel}
 BuildRequires:	pkgconfig
-BuildRequires:	python3 >= 1:3
+BuildRequires:	python3 >= 1:3.10
 BuildRequires:	python3-lxml
 BuildRequires:	python3-modules >= 1:3
+BuildRequires:	vulkan-volk-devel >= 1.3.275
 %{?with_wayland:BuildRequires:	wayland-devel}
 %{?with_wayland:BuildRequires:	wayland-protocols}
 %{?with_x11:BuildRequires:	xorg-lib-libX11-devel}
@@ -50,20 +53,17 @@ Dummy Vulkan ICD (driver).
 Atrapa sterownika Vulkan.
 
 %prep
-%setup -qn %{name}-sdk-%{version}
+%setup -q -n %{name}-%{gitref}
 
 %build
-install -d build
-cd build
-
-%cmake .. \
+%cmake -B build \
 	%{!?with_wayland:-DBUILD_WSI_WAYLAND_SUPPORT=OFF} \
 	%{!?with_x11:-DBUILD_WSI_XCB_SUPPORT=OFF} \
 	%{!?with_x11:-DBUILD_WSI_XLIB_SUPPORT=OFF} \
 	-DGLSLANG_INSTALL_DIR=%{_prefix} \
 	-DINSTALL_ICD=ON
 
-%{__make}
+%{__make} -C build
 
 %install
 rm -rf $RPM_BUILD_ROOT
