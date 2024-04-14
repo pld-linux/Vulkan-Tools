@@ -3,7 +3,7 @@
 %bcond_without	wayland	# Wayland support
 %bcond_without	x11	# X11 (Xlib/XCB) support
 
-%define	api_version	1.3.275.0
+%define	api_version	1.3.280.0
 %define	gitref		vulkan-sdk-%{api_version}
 
 Summary:	Vulkan API Tools
@@ -15,7 +15,7 @@ License:	Apache v2.0
 Group:		Applications/Graphics
 #Source0Download: https://github.com/KhronosGroup/Vulkan-Tools/tags
 Source0:	https://github.com/KhronosGroup/Vulkan-Tools/archive/%{gitref}/%{name}-%{gitref}.tar.gz
-# Source0-md5:	438bd9ce3e70c54b43101edb12dd8d19
+# Source0-md5:	f68e21f73b893d882e5f97959f489757
 URL:		https://github.com/KhronosGroup/Vulkan-Tools/
 BuildRequires:	Vulkan-Loader-devel >= %{api_version}
 BuildRequires:	cmake >= 3.17.2
