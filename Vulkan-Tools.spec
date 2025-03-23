@@ -1,9 +1,10 @@
 #
 # Conditional build:
-%bcond_without	wayland	# Wayland support
-%bcond_without	x11	# X11 (Xlib/XCB) support
+%bcond_with	directfb	# DirectFB support
+%bcond_without	wayland		# Wayland support
+%bcond_without	x11		# X11 (Xlib/XCB) support
 
-%define	api_version	1.3.280.0
+%define	api_version	1.4.309.0
 %define	gitref		vulkan-sdk-%{api_version}
 
 Summary:	Vulkan API Tools
@@ -15,10 +16,11 @@ License:	Apache v2.0
 Group:		Applications/Graphics
 #Source0Download: https://github.com/KhronosGroup/Vulkan-Tools/tags
 Source0:	https://github.com/KhronosGroup/Vulkan-Tools/archive/%{gitref}/%{name}-%{gitref}.tar.gz
-# Source0-md5:	f68e21f73b893d882e5f97959f489757
+# Source0-md5:	d8354708e1bf527d19d6e0d72484b821
 URL:		https://github.com/KhronosGroup/Vulkan-Tools/
+%{?with_directfb:BuildRequires:	DirectFB-devel}
 BuildRequires:	Vulkan-Loader-devel >= %{api_version}
-BuildRequires:	cmake >= 3.17.2
+BuildRequires:	cmake >= 3.22.1
 BuildRequires:	glslang
 BuildRequires:	libstdc++-devel >= 6:7
 %{?with_x11:BuildRequires:	libxcb-devel}
@@ -26,7 +28,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	python3 >= 1:3.10
 BuildRequires:	python3-lxml
 BuildRequires:	python3-modules >= 1:3
-BuildRequires:	vulkan-volk-devel >= 1.3.275
+BuildRequires:	vulkan-volk-devel >= %{api_version}
 %{?with_wayland:BuildRequires:	wayland-devel}
 %{?with_wayland:BuildRequires:	wayland-protocols}
 %{?with_x11:BuildRequires:	xorg-lib-libX11-devel}
@@ -57,6 +59,7 @@ Atrapa sterownika Vulkan.
 
 %build
 %cmake -B build \
+	%{?with_directfb:-DBUILD_WSI_DIRECTFB_SUPPORT=ON} \
 	%{!?with_wayland:-DBUILD_WSI_WAYLAND_SUPPORT=OFF} \
 	%{!?with_x11:-DBUILD_WSI_XCB_SUPPORT=OFF} \
 	%{!?with_x11:-DBUILD_WSI_XLIB_SUPPORT=OFF} \
@@ -80,9 +83,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-%doc GOVERNANCE.md README.md vulkaninfo/vulkaninfo.md
+%doc README.md vulkaninfo/vulkaninfo.md
 %attr(755,root,root) %{_bindir}/vkcube
-%attr(755,root,root) %{_bindir}/vkcube-wayland
 %attr(755,root,root) %{_bindir}/vkcubepp
 %attr(755,root,root) %{_bindir}/vulkaninfo
 
