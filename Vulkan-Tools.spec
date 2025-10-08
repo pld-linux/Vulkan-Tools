@@ -61,10 +61,10 @@ Atrapa sterownika Vulkan.
 
 %build
 %cmake -B build \
-	%{?with_directfb:-DBUILD_WSI_DIRECTFB_SUPPORT=ON} \
-	%{!?with_wayland:-DBUILD_WSI_WAYLAND_SUPPORT=OFF} \
-	%{!?with_x11:-DBUILD_WSI_XCB_SUPPORT=OFF} \
-	%{!?with_x11:-DBUILD_WSI_XLIB_SUPPORT=OFF} \
+	%{cmake_on_off directfb BUILD_WSI_DIRECTFB_SUPPORT} \
+	%{cmake_on_off wayland BUILD_WSI_WAYLAND_SUPPORT} \
+	%{cmake_on_off x11 BUILD_WSI_XCB_SUPPORT} \
+	%{cmake_on_off x11 BUILD_WSI_XLIB_SUPPORT} \
 	-DGLSLANG_INSTALL_DIR=%{_prefix} \
 	-DINSTALL_ICD=ON
 
